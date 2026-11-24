@@ -35,7 +35,7 @@ function App() {
           <p className="text-center text-gray-400">Loading characters...</p>
         ) : error ? (
           <p className="text-center text-gray-400">
-            Karakter tidak ditemukan.
+            Character not found.
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -44,6 +44,7 @@ function App() {
                 key={character.id}
                 name={character.name}
                 image={character.image}
+                status={character.status}
               />
             ))}
           </div>
