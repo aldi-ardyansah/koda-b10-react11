@@ -38,7 +38,7 @@ function CharacterDetail() {
   return (
     <div className="min-h-screen bg-black text-white py-5">
       <div className="flex flex-col w-11/12 m-auto bg-gray-800 rounded-lg p-10 gap-10">
-        <div className="flex items-center w-full" style={{ justifyContent: "center" }}>
+        <div className="flex items-center justify-center w-full">
           <img
             src={character.image || "/placeholder.svg"}
             alt={character.name}
@@ -62,8 +62,7 @@ function CharacterDetail() {
 
         <Link
           to="/"
-          className="flex bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold"
-          style={{ width: "fit-content" }}
+          className="flex w-fit bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold"
         >
           Back to Characters
         </Link>
