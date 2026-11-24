@@ -42,20 +42,26 @@ const fetchCharacters = createAsyncThunk(
       if (arg.name) params.append("name", arg.name);
       if (arg.status) params.append("status", arg.status);
 
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/character?${params.toString()}`
-      );
+      let url = `https://rickandmortyapi.com/api/character?${params.toString()}`;
+      let characters = [];
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Something went wrong");
+      while (url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Something went wrong");
+        }
+
+        const data = await response.json();
+
+        characters = [...characters, ...data.results];
+        url = data.info.next;
       }
 
-      const data = await response.json();
+      dispatch(setCharacters(characters));
 
-      dispatch(setCharacters(data.results));
-
-      return data.results;
+      return characters;
     }
     catch (error) {
       dispatch(setError(error.message));

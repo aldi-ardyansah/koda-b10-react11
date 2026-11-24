@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useSearchParams } from "react-router";
+import { useSearchParams, Routes, Route } from "react-router";
 import { fetchCharacters } from "./redux/slices/charactersSlice.js";
 import CharacterCard from "./components/CharacterCard.jsx";
 import SearchInput from "./components/SearchInput.jsx";
+import CharacterDetail from "./pages/CharacterDetail.jsx";
 
-function App() {
+function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
 
@@ -33,7 +34,12 @@ function App() {
     <div className="min-h-screen bg-black text-white py-5">
       <div className="flex flex-col w-11/12 max-w-6xl m-auto bg-gray-800 rounded-lg p-10 gap-10">
         <p className="text-center text-4xl font-bold">Rick and Morty Characters</p>
-        <SearchInput search={search} status={status} setSearch={handleSearch} />
+        <SearchInput
+          key={`${search}-${status}`}
+          search={search}
+          status={status}
+          setSearch={handleSearch}
+        />
 
         {loading ? (
           <p className="text-center text-gray-400">Loading characters...</p>
@@ -46,6 +52,7 @@ function App() {
             {characters.map((character) => (
               <CharacterCard
                 key={character.id}
+                id={character.id}
                 name={character.name}
                 image={character.image}
                 status={character.status}
@@ -55,6 +62,15 @@ function App() {
         )}
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/character/:id" element={<CharacterDetail />} />
+    </Routes>
   );
 }
 
