@@ -32,7 +32,7 @@ function SearchInput({search, status, setSearch}) {
 
       <button
         type="submit"
-        className="bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold"
+        className="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold"
       >
         Search
       </button>

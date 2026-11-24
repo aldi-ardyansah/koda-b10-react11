@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSearchParams } from "react-router";
 import { fetchCharacters } from "./redux/slices/charactersSlice.js";
@@ -15,6 +16,10 @@ function App() {
   const search = searchParams.get("search") || "";
   const status = searchParams.get("status") || "";
 
+  useEffect(() => {
+    dispatch(fetchCharacters({ name: search, status }));
+  }, [dispatch, search, status]);
+
   const handleSearch = (name, status) => {
     const params = {};
 
@@ -22,7 +27,6 @@ function App() {
     if (status) params.status = status;
 
     setSearchParams(params, { replace: true });
-    dispatch(fetchCharacters({ name, status }));
   };
 
   return (

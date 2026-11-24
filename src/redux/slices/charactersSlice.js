@@ -14,7 +14,8 @@ export const fetchCharacters = createAsyncThunk(
       );
 
       if (!response.ok) {
-        throw new Error("Character not found");
+        const error = await response.json();
+        throw new Error(error.error || "Something went wrong");
       }
 
       const data = await response.json();
