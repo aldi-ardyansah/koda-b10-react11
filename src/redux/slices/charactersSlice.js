@@ -1,13 +1,46 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchCharacters = createAsyncThunk(
+const charactersSlice = createSlice({
+  name: "characters",
+  initialState: {
+    characters: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {
+    setLoading: (prevState) => ({
+      ...prevState,
+      loading: true,
+      error: null,
+    }),
+    setCharacters: (prevState, action) => ({
+      ...prevState,
+      characters: action.payload,
+      loading: false,
+    }),
+    setError: (prevState, action) => ({
+      ...prevState,
+      characters: [],
+      loading: false,
+      error: action.payload,
+    }),
+  },
+});
+
+const { setLoading, setCharacters, setError } = charactersSlice.actions;
+
+const fetchCharacters = createAsyncThunk(
   "characters/fetchCharacters",
-  async ({ name, status }, { rejectWithValue }) => {
+  async (arg, thunkAPI) => {
+    const { dispatch, rejectWithValue } = thunkAPI;
+
+    dispatch(setLoading());
+
     try {
       const params = new URLSearchParams();
 
-      if (name) params.append("name", name);
-      if (status) params.append("status", status);
+      if (arg.name) params.append("name", arg.name);
+      if (arg.status) params.append("status", arg.status);
 
       const response = await fetch(
         `https://rickandmortyapi.com/api/character?${params.toString()}`
@@ -20,41 +53,23 @@ export const fetchCharacters = createAsyncThunk(
 
       const data = await response.json();
 
+      dispatch(setCharacters(data.results));
+
       return data.results;
     }
     catch (error) {
+      dispatch(setError(error.message));
+
       return rejectWithValue(error.message);
     }
   }
 );
 
-const charactersSlice = createSlice({
-  name: "characters",
-  initialState: {
-    characters: [],
-    loading: false,
-    error: null,
-  },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchCharacters.pending, (prevState) => ({
-        ...prevState,
-        loading: true,
-        error: null,
-      }))
-      .addCase(fetchCharacters.fulfilled, (prevState, action) => ({
-        ...prevState,
-        characters: action.payload,
-        loading: false,
-      }))
-      .addCase(fetchCharacters.rejected, (prevState, action) => ({
-        ...prevState,
-        characters: [],
-        loading: false,
-        error: action.payload,
-      }));
-  },
-});
+export const charactersActions = {
+  ...charactersSlice.actions,
+  fetchCharacters,
+};
+
+export { fetchCharacters };
 
 export default charactersSlice.reducer;
